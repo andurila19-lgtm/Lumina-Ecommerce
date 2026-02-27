@@ -7,8 +7,12 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LUMINA | Modern E-Commerce Store",
-  description: "Experience premium shopping with our curated collection of minimalist products.",
+  title: {
+    template: '%s | MARKETID',
+    default: 'MARKETID | Belanja Online Aman & Nyaman',
+  },
+  description: "Temukan jutaan produk impianmu dengan harga terbaik hanya di MARKETID. Gratis Ongkir, Flash Sale tiap hari!",
+  keywords: ["ecommerce", "belanja online", "marketid", "promo", "gadget", "fashion"],
 };
 
 export default function RootLayout({

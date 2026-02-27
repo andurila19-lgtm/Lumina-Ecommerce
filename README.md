@@ -96,15 +96,15 @@ CREATE TABLE cart_items (
 
 ---
 
-## 💳 Payment Gateway Integration
+## 💳 Payment Gateway Simulation
 
-The checkout flow is designed to be easily integrated with leading Indonesian payment gateways such as **Midtrans** or **Xendit**, providing a seamless transaction experience.
+The checkout flow is designed to demonstrate how an integration with leading Indonesian payment gateways (such as **Midtrans** or **Xendit**) would work in a real-world scenario. Currently, this MVP uses a simulated transaction flow suitable for portfolio demonstration without requiring real API keys.
 
-### Implementation Flow:
-1. **Order Creation:** Upon checkout, the Express.js backend creates an order record in the database and requests a transaction token from the payment gateway API (e.g., Midtrans Snap API).
-2. **Client-Side Trigger:** The Next.js frontend receives the token and initializes the payment popup (Snap Dialog) directly on the checkout page without redirecting the user.
-3. **Webhook Listener:** The Express.js backend listens for asynchronous webhook callbacks from the payment gateway to securely update the order status (e.g., from `pending` to `paid` or `failed`).
-4. **Supported Methods:** Ready to handle Virtual Accounts (BCA, Mandiri, BNI), E-Wallets (GoPay, ShopeePay, OVO), and Credit Cards.
+### Demonstrated Flow (Simulated):
+1. **Order Creation:** Upon checkout, the backend processes the order and generates a mock transaction token.
+2. **Client-Side Trigger:** The Next.js frontend simulates the initialization of a payment popup directly on the checkout page.
+3. **Status Update:** The order status is automatically updated to 'paid' to mimic a successful webhook callback.
+4. **Supported Methods (Mocked):** UI placeholders for Virtual Accounts (BCA, Mandiri, BNI), E-Wallets (GoPay, ShopeePay, OVO), and Credit Cards.
 
 ---
 

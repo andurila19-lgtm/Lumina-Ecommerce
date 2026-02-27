@@ -11,15 +11,34 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const loginSchema = z.object({
+    email: z.string().email({ message: 'Alamat email tidak valid' }),
+    password: z.string().min(1, { message: 'Password wajib diisi' }),
+    remember: z.boolean().optional(),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<LoginFormValues>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            remember: false
+        }
+    });
+
+    const onSubmit = (data: LoginFormValues) => {
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
-            toast.success('Successfully logged in! (Simulation)');
+            console.log("Login Data Validated:", data);
+            toast.success('Berhasil masuk! (Simulasi)');
         }, 1500);
     };
 
@@ -69,28 +88,34 @@ export default function LoginPage() {
                         <p className="text-slate-500 font-medium">Belum punya akun? <Link href="/register" className="text-blue-600 font-bold hover:underline">Daftar Sekarang</Link></p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                        <div className="space-y-1">
                             <Label htmlFor="email">Email</Label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                <Input id="email" type="email" placeholder="nama@email.com" className="pl-10 font-bold lowercase" required />
+                                <Mail className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+                                <Input id="email" type="email" placeholder="nama@email.com" className={`pl-10 font-bold lowercase ${errors.email ? 'border-red-500' : ''}`} {...register('email')} />
                             </div>
+                            {errors.email && <span className="text-xs text-red-500 font-bold">{errors.email.message}</span>}
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                             <div className="flex justify-between items-center">
                                 <Label htmlFor="password">Password</Label>
                                 <Link href="#" className="text-xs text-blue-600 font-bold hover:underline">Lupa Password?</Link>
                             </div>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                <Input id="password" type="password" placeholder="••••••••" className="pl-10 font-bold lowercase" required />
+                                <Lock className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+                                <Input id="password" type="password" placeholder="••••••••" className={`pl-10 font-bold ${errors.password ? 'border-red-500' : ''}`} {...register('password')} />
                             </div>
+                            {errors.password && <span className="text-xs text-red-500 font-bold">{errors.password.message}</span>}
                         </div>
 
-                        <div className="flex items-center space-x-2">
-                            <Checkbox id="remember" />
+                        <div className="flex items-center space-x-2 pt-2">
+                            <Checkbox
+                                id="remember"
+                                checked={watch('remember')}
+                                onCheckedChange={(checked) => setValue('remember', checked as boolean)}
+                            />
                             <label htmlFor="remember" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Ingat saya
                             </label>
@@ -112,16 +137,16 @@ export default function LoginPage() {
                     <div className="mt-6 text-center">
                         <p className="text-xs text-slate-500 mb-4">Atau Masuk Dengan</p>
                         <div className="flex justify-center gap-4">
-                            <Button variant="outline" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center">
+                            <Button variant="outline" type="button" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-slate-50">
                                 <IconBrandGoogle className="h-5 w-5" />
                             </Button>
-                            <Button variant="outline" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center">
+                            <Button variant="outline" type="button" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-slate-50">
                                 <Phone className="h-5 w-5 text-green-600" />
                             </Button>
-                            <Button variant="outline" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center">
+                            <Button variant="outline" type="button" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-slate-50">
                                 <Facebook className="h-5 w-5 text-blue-600 fill-blue-600" />
                             </Button>
-                            <Button variant="outline" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center">
+                            <Button variant="outline" type="button" className="border-slate-200 h-12 w-12 rounded-full p-0 flex items-center justify-center hover:bg-slate-50">
                                 <Apple className="h-5 w-5 fill-black" />
                             </Button>
                         </div>
